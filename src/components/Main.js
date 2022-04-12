@@ -1,10 +1,9 @@
 import React from 'react';
 import api from '../utils/api';
-//import Card from './Card';
+import Card from './Card';
 
 
 function Main (props) {
-  
   const [ userName, setUserName] = React.useState();
   const [userDescription, setUserDescription] = React.useState();
   const [userAvatar, setUserAvatar] = React.useState();
@@ -19,20 +18,20 @@ function Main (props) {
     })
   })
 
-  React.useEffect( ()=> {
-    api.getCards()
-      .then (res => {
-        const data = res.map(item => {
-           return {
-            link: item.link,
-            likes: item.likes,
-            title: item.name,
-            id: item._id,
-          }
-        })
-      setCards(data)
+React.useEffect( ()=> {
+  api.getCards()
+    .then (res => {
+      const data = res.map(item => {
+         return {
+          link: item.link,
+          likes: item.likes,
+          title: item.name,
+          key: item._id,
+        }
       })
-  }, [])
+    setCards(data)
+    })
+}, [])
 
   return (
     <main className="content">
@@ -51,27 +50,18 @@ function Main (props) {
             <p className="input__job">{userDescription}</p>
           </div>
         </div>
-        <button type="button" onClick={props.onAddPlace} className="add-btn"></button>        
+        <button type="button" onClick={props.onAddPlace} className="add-btn"></button>
       </section>
 
       <section className="places-gallery">
         <ul className="places-gallery__list">
-          {          
-            cards.map(item => {
-              return (
-                  <li className="place-card" key={item.id}>
-                    <img className="place-card__photo" style={{ backgroundImage: `url(${item.link})`}}/>
-                    <div className="place-card__text">
-                      <h3 className="place-card__title">{item.title}</h3>
-                        <div className="place-card__info">
-                          <button type="button" class="like-btn"></button>
-                          <span className="like-count">{item.likes}</span>
-                        </div>
-                    </div>
-                    <button type="button" className="delete-btn"></button>
-                  </li>
-             )
-              //<Card key={item.id} title={item.title} link={item.link} likes={item.likes} />
+          {
+            cards.map((item) =>{
+               return <Card
+                card={item}
+                key={item.key}
+                cardClick={props.onCardClick}
+              />
             })
           }  
         </ul>
@@ -79,5 +69,4 @@ function Main (props) {
     </main>
   )
 }
-
 export default Main;

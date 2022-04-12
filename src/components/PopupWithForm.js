@@ -1,7 +1,6 @@
 function PopupWithForm (props) {
   return (
-    props.isOpen &&
-    <article className={`popup popup_type_${props.name} popup_opened`}>
+    <article className={`popup popup_type_${props.name} ${props.isOpen ? 'popup_opened' : ''}`}>
     <form name={props.name} className="popup__container">
       <button type="button" aria-label="закрыть окно" className="popup__close" onClick={props.onClose}></button>
       <div className="popup__text-container">
