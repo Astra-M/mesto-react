@@ -4,9 +4,9 @@ import Card from './Card';
 
 
 function Main (props) {
-  const [ userName, setUserName] = React.useState();
-  const [userDescription, setUserDescription] = React.useState();
-  const [userAvatar, setUserAvatar] = React.useState();
+  const [ userName, setUserName] = React.useState('');
+  const [userDescription, setUserDescription] = React.useState('');
+  const [userAvatar, setUserAvatar] = React.useState('');
   const [cards, setCards] = React.useState([])
 
   React.useEffect ( () => { 
@@ -15,23 +15,25 @@ function Main (props) {
         setUserAvatar(res.avatar);
         setUserDescription(res.about);
         setUserName(res.name)
-    })
-  })
-
-React.useEffect( ()=> {
-  api.getCards()
-    .then (res => {
-      const data = res.map(item => {
-         return {
-          link: item.link,
-          likes: item.likes,
-          title: item.name,
-          key: item._id,
-        }
       })
-    setCards(data)
-    })
-}, [])
+      .catch(err => console.log(err))
+  }, [])
+
+  React.useEffect( ()=> {
+    api.getCards()
+      .then (res => {
+        const data = res.map(item => {
+          return {
+            link: item.link,
+            likes: item.likes,
+            title: item.name,
+            key: item._id,
+          }
+        })
+        setCards(data)
+      })
+      .catch(err => console.log(err))
+  }, [])
 
   return (
     <main className="content">
@@ -56,14 +58,14 @@ React.useEffect( ()=> {
       <section className="places-gallery">
         <ul className="places-gallery__list">
           {
-            cards.map((item) =>{
-               return <Card
+            cards.map((item) =>(
+                <Card
                 card={item}
                 key={item.key}
                 cardClick={props.onCardClick}
               />
-            })
-          }  
+            ))
+          }
         </ul>
       </section>
     </main>
