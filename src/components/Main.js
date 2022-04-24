@@ -1,39 +1,10 @@
 import React from 'react';
-import api from '../utils/api';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import Card from './Card';
 
 
-function Main (props) {
-  const [ userName, setUserName] = React.useState('');
-  const [userDescription, setUserDescription] = React.useState('');
-  const [userAvatar, setUserAvatar] = React.useState('');
-  const [cards, setCards] = React.useState([])
-
-  React.useEffect ( () => { 
-    api.getProfile()
-      .then ( res => {
-        setUserAvatar(res.avatar);
-        setUserDescription(res.about);
-        setUserName(res.name)
-      })
-      .catch(err => console.log(err))
-  }, [])
-
-  React.useEffect( ()=> {
-    api.getCards()
-      .then (res => {
-        const data = res.map(item => {
-          return {
-            link: item.link,
-            likes: item.likes,
-            title: item.name,
-            key: item._id,
-          }
-        })
-        setCards(data)
-      })
-      .catch(err => console.log(err))
-  }, [])
+export default function Main (props) {
+  const userContext = React.useContext(CurrentUserContext);
 
   return (
     <main className="content">
@@ -42,14 +13,14 @@ function Main (props) {
           <div 
             className="user-form__avatar" 
             onClick={props.onEditAvatar}
-            style={{ backgroundImage: `url(${userAvatar})` }}>
+            style={{ backgroundImage: `url(${userContext.avatar})` }}>
           </div>
           <div className="input">
             <div className="input__block">
-              <h1 className="input__name">{userName}</h1>
+              <h1 className="input__name">{userContext.name}</h1>
               <button type="button" onClick={props.onEditProfile} className="edit-btn"></button>
             </div>
-            <p className="input__job">{userDescription}</p>
+            <p className="input__job">{userContext.about}</p>
           </div>
         </div>
         <button type="button" onClick={props.onAddPlace} className="add-btn"></button>
@@ -58,12 +29,13 @@ function Main (props) {
       <section className="places-gallery">
         <ul className="places-gallery__list">
           {
-            cards.map((item) =>(
+            props.cards.map((item) =>(
                 <Card
                 card={item}
                 key={item.key}
                 cardClick={props.onCardClick}
-              />
+                onCardLike={props.onCardLike}
+                onCardDelete={props.onCardDelete}/>
             ))
           }
         </ul>
@@ -71,4 +43,3 @@ function Main (props) {
     </main>
   )
 }
-export default Main;

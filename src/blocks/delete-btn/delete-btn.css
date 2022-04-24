@@ -1,4 +1,7 @@
 .delete-btn {
+  /* visibility: visible; */
+  /* display: block; */
+
   position: absolute;
   background-image: url("../../images/trash-icon.svg");
   background-repeat: no-repeat;
