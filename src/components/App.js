@@ -24,9 +24,7 @@ function App() {
         setCurrentUser(res)
       })
       .catch(err => console.log(err))
-  }, [])
-
-  React.useEffect( ()=> {
+    
     api.getCards()
       .then (res => {
         const data = res.map(item => {
